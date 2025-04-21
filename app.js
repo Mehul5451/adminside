@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 
@@ -13,13 +12,15 @@ const port = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // CORS options
+const cors = require('cors');
+
 const corsOptions = {
-  origin: '*', // Change for production
-  credentials: true, // Allow cookies
+  origin: 'https://frontend-s7gm.vercel.app', // your frontend's domain
+  credentials: true, // allow cookies to be sent
 };
 
-// Middleware
 app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(cookieParser());
 
