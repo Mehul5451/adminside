@@ -37,29 +37,36 @@ app.use(cookieParser());
 app.post("/admin-login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("Login Request:", { email, password }); // Log incoming credentials
 
-    // Check if the user exists
     const user = await Admin.findOne({ email });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user) {
+      console.log("❌ Admin not found");
+      return res.status(404).json({ error: "User not found" });
+    }
 
-    // Compare the password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
+    console.log("Password Match:", isMatch); // See if bcrypt check is passing
 
-    // Create the JWT token
+    if (!isMatch) {
+      console.log("❌ Invalid password for:", email);
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
     const adminToken = jwt.sign(
       { userId: user._id, email: user.email },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    // Send the token in the response (NO cookies)
+    console.log("✅ Admin token created");
     res.status(200).json({ token: adminToken });
   } catch (error) {
-    console.error("Error during login:", error);
+    console.error("💥 Login Error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 // Auth Middleware
