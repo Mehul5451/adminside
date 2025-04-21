@@ -50,10 +50,10 @@ app.post("/admin-login", async (req, res) => {
     const adminToken = jwt.sign(
       { userId: user._id, email: user.email },
       JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" }
     );
 
-    // Send the token in the response
+    // Send the token in the response (NO cookies)
     res.status(200).json({ token: adminToken });
   } catch (error) {
     console.error("Error during login:", error);
@@ -64,26 +64,29 @@ app.post("/admin-login", async (req, res) => {
 
 // Auth Middleware
 const authMiddleware = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Get token from Authorization header
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized, token required" });
   }
 
+  const token = authHeader.split(" ")[1];
+
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
+    const decoded = jwt.verify(token, JWT_SECRET);
     const admin = await Admin.findById(decoded.userId);
 
     if (!admin) {
       return res.status(401).json({ message: "Unauthorized, admin not found" });
     }
 
-    req.admin = admin; // Attach admin info to the request
-    next(); // Proceed to the next middleware/route handler
+    req.admin = admin;
+    next();
   } catch (error) {
     return res.status(403).json({ message: "Invalid or expired token" });
   }
 };
+
 
 // Protected Admin Route
 app.get("/admin", authMiddleware, async (req, res) => {
