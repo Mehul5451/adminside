@@ -268,7 +268,7 @@
 //create admin manualy
 //------------------------------------
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const {Admin} = require("./login"); // Adjust the path based on your project structure
 
 const createAdmin = async () => {
