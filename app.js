@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const cors = require("cors");
+//const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 
@@ -13,12 +13,14 @@ const port = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // CORS options
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173','https://frontend-s7gm.vercel.app']; // Allow multiple origins
+
+const cors = require('cors');
 const corsOptions = {
-  origin: "https://frontend-s7gm.vercel.app/admin-login", // Change for production
-  credentials: true, // Allow cookies
+  origin: 'https://frontend-s7gm.vercel.app', // Allow only this origin
+  credentials: true, // Allow credentials (cookies, etc.)
 };
 
-// Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
