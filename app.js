@@ -14,7 +14,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // CORS options
 const corsOptions = {
-  origin: "http://localhost:5173", // Change for production
+  origin: "https://frontend-s7gm.vercel.app/admin-login", // Change for production
   credentials: true, // Allow cookies
 };
 
